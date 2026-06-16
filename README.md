@@ -1,6 +1,6 @@
 # MO-IT103-Group16
 
-Date Updated: June 2026
+Date Updated: 6/16/2026
 
 Milestone 2: Employee Management and Payroll System
 
