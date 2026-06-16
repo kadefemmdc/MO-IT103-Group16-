@@ -4,6 +4,7 @@ import java.util.ArrayList;
 public class CSVDataManager {
     private static final String EMPLOYEE_FILE = "resources/MotorPH_Employee Data - Employee Details.csv";
     private static final String ATTENDANCE_FILE = "resources/MotorPH_Employee Data - Attendance Record.csv";
+    private static final String EMPLOYEE_NUMBER_TRACKER = "resources/employee_number_tracker.txt";
 
     private static final String EMPLOYEE_HEADER =
             "Employee #,Last Name,First Name,Birthday,Address,Phone Number,SSS #,Philhealth #,TIN #,Pag-ibig #,Status,Position,Immediate Supervisor,Basic Salary,Rice Subsidy,Phone Allowance,Clothing Allowance,Gross Semi-monthly Rate,Hourly Rate";
@@ -90,6 +91,7 @@ public class CSVDataManager {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(EMPLOYEE_FILE, true))) {
             writer.newLine();
             writer.write(employeeToCSV(employee));
+            saveLastIssuedEmployeeNumber(employee.getEmployeeNumber());
             return true;
 
         } catch (Exception e) {
@@ -146,6 +148,15 @@ public class CSVDataManager {
     }
 
     public int getNextEmployeeNumber() {
+        int highestFromCSV = getHighestEmployeeNumberFromCSV();
+        int lastIssued = readLastIssuedEmployeeNumber();
+
+        int highestKnownNumber = Math.max(highestFromCSV, lastIssued);
+
+        return highestKnownNumber + 1;
+    }
+
+    private int getHighestEmployeeNumberFromCSV() {
         ArrayList<Employee> employees = loadEmployees();
         int highestNumber = 10000;
 
@@ -155,7 +166,33 @@ public class CSVDataManager {
             }
         }
 
-        return highestNumber + 1;
+        return highestNumber;
+    }
+
+    private int readLastIssuedEmployeeNumber() {
+        int highestFromCSV = getHighestEmployeeNumberFromCSV();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(EMPLOYEE_NUMBER_TRACKER))) {
+            String line = reader.readLine();
+
+            if (line != null && line.trim().matches("[0-9]+")) {
+                return Integer.parseInt(line.trim());
+            }
+
+        } catch (Exception e) {
+            return highestFromCSV;
+        }
+
+        return highestFromCSV;
+    }
+
+    private void saveLastIssuedEmployeeNumber(int employeeNumber) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(EMPLOYEE_NUMBER_TRACKER))) {
+            writer.write(String.valueOf(employeeNumber));
+
+        } catch (Exception e) {
+            System.out.println("Error saving employee number tracker: " + e.getMessage());
+        }
     }
 
     public Employee findEmployeeByNumber(ArrayList<Employee> employees, int employeeNumber) {
