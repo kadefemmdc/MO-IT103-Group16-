@@ -238,7 +238,7 @@ public EmployeeDashboardFrame(boolean payrollStaffMode) {
         gbc.gridwidth = 2;
 
         backButton = new JButton(
-        payrollStaffMode ? "Back to Menu" : "Logout"
+        this.payrollStaffMode ? "Back to Menu" : "Logout"
 );
         panel.add(backButton, gbc);
 
@@ -250,7 +250,7 @@ public EmployeeDashboardFrame(boolean payrollStaffMode) {
 
        backButton.addActionListener(e -> {
 
-    if (payrollStaffMode) {
+    if (this.payrollStaffMode) {
         dispose();
         new MainMenuFrame();
 
