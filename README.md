@@ -1,10 +1,10 @@
-MO-IT103 Group 16
+# MO-IT103-Group16
 
 Date Updated: June 2026
 
 Milestone 2: Employee Management and Payroll System
 
-Team Details
+## Team Details
 
 Katrina Anne Defe
 
@@ -16,10 +16,58 @@ Gjoshan Agnon
 
 Joy Mae Pedoy
 
+## Program Details
+
 The MotorPH Employee Management System is a Java-based desktop application that uses CSV files as its data source. The system begins with a login page where users enter their username and password. Two user roles are supported: Employee and Payroll Staff.
 
-Employees can log in to access the payroll computation module, where they can search their employee information and view payroll details based on attendance records.
+If the user logs in as an employee, the system allows them to access the payroll computation module, search for an employee record, and view payroll information based on attendance records stored in CSV files.
 
-Payroll Staff can access the Employee Record Management module, which supports viewing, adding, updating, and deleting employee records. All changes are saved directly to CSV files and remain available after restarting the application.
+If the user logs in as payroll staff, the system provides access to Employee Record Management and Payroll Computation modules. Payroll staff can view, add, update, and delete employee records. All changes are automatically saved to the CSV files and remain available after restarting the application.
 
-The payroll computation module reads employee and attendance records, calculates hours worked, computes gross pay, applies government deductions (SSS, PhilHealth, Pag-IBIG, and Withholding Tax), and displays the resulting net pay.
+The payroll module reads employee and attendance records, computes hours worked, calculates gross pay, applies government deductions such as SSS, PhilHealth, Pag-IBIG, and Withholding Tax, and displays the resulting net pay.
+
+## Features Implemented
+
+### Login Authentication
+
+* Username and password validation
+* Role-based access control
+* Employee and Payroll Staff accounts
+
+### Employee Record Management
+
+* View employee records
+* Add employee records
+* Update employee records
+* Delete employee records
+* View employee details
+
+### Payroll Computation
+
+* Search employee records
+* Calculate hours worked
+* Compute gross pay
+* Compute government deductions
+* Compute net pay
+
+### Data Persistence
+
+* Employee data stored in CSV files
+* Attendance data stored in CSV files
+* User credentials stored in CSV files
+* Employee number tracking using a text file
+
+## Test Accounts
+
+### Payroll Staff
+
+Username: admin
+
+Password: admin123
+
+### Employee
+
+Username: 10001
+
+Password: pass123
+
