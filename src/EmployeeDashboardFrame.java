@@ -28,6 +28,7 @@ public class EmployeeDashboardFrame extends JFrame {
     private JButton searchButton;
     private JButton computePayrollButton;
     private JButton resetButton;
+    private JButton backButton;
 
     private CSVDataManager dataManager;
     private ArrayList<Employee> employees;
@@ -114,7 +115,13 @@ public class EmployeeDashboardFrame extends JFrame {
         resetButton = new JButton("Reset Form");
         panel.add(resetButton, gbc);
 
-        addSectionHeader(panel, gbc, "Employee Details", 5);
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+
+        backButton = new JButton("Back to Menu");
+        panel.add(backButton, gbc);
+
+        addSectionHeader(panel, gbc, "Employee Details", 6);
 
         gbc.gridx = 0;
         gbc.gridy = 6;
@@ -158,7 +165,7 @@ public class EmployeeDashboardFrame extends JFrame {
 
         gbc.gridwidth = 1;
 
-        addSectionHeader(panel, gbc, "Attendance Summary", 11);
+        addSectionHeader(panel, gbc, "Attendance Summary", 13);
 
         gbc.gridx = 0;
         gbc.gridy = 12;
@@ -176,7 +183,7 @@ public class EmployeeDashboardFrame extends JFrame {
         hoursWorkedValueLabel = new JLabel("-");
         panel.add(hoursWorkedValueLabel, gbc);
 
-        addSectionHeader(panel, gbc, "Salary Computation", 14);
+        addSectionHeader(panel, gbc, "Salary Computation", 16);
 
         gbc.gridx = 0;
         gbc.gridy = 15;
@@ -231,6 +238,10 @@ public class EmployeeDashboardFrame extends JFrame {
         searchButton.addActionListener(e -> searchEmployee());
         computePayrollButton.addActionListener(e -> computePayroll());
         resetButton.addActionListener(e -> resetForm());
+        backButton.addActionListener(e -> {
+    dispose();
+    new MainMenuFrame();
+});
 
         employeeNumberField.getDocument().addDocumentListener(
                 new DocumentListener() {
