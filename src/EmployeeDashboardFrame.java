@@ -35,15 +35,21 @@ public class EmployeeDashboardFrame extends JFrame {
     private ArrayList<AttendanceRecord> attendanceRecords;
 
     private Employee selectedEmployee;
+    private boolean payrollStaffMode;
 
     public EmployeeDashboardFrame() {
+    this(false);
+}
+
+public EmployeeDashboardFrame(boolean payrollStaffMode) {
+    this.payrollStaffMode = payrollStaffMode;
 
         dataManager = new CSVDataManager();
         employees = dataManager.loadEmployees();
         attendanceRecords = dataManager.loadAttendanceRecords();
 
-        setTitle("MotorPH Employee App");
-        setSize(670, 820);
+        setTitle("MotorPH Employee App - Payroll Computation");
+        setSize(670, 850);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -115,13 +121,7 @@ public class EmployeeDashboardFrame extends JFrame {
         resetButton = new JButton("Reset Form");
         panel.add(resetButton, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 5;
-
-        backButton = new JButton("Back to Menu");
-        panel.add(backButton, gbc);
-
-        addSectionHeader(panel, gbc, "Employee Details", 6);
+        addSectionHeader(panel, gbc, "Employee Details", 5);
 
         gbc.gridx = 0;
         gbc.gridy = 6;
@@ -165,7 +165,7 @@ public class EmployeeDashboardFrame extends JFrame {
 
         gbc.gridwidth = 1;
 
-        addSectionHeader(panel, gbc, "Attendance Summary", 13);
+        addSectionHeader(panel, gbc, "Attendance Summary", 11);
 
         gbc.gridx = 0;
         gbc.gridy = 12;
@@ -183,7 +183,7 @@ public class EmployeeDashboardFrame extends JFrame {
         hoursWorkedValueLabel = new JLabel("-");
         panel.add(hoursWorkedValueLabel, gbc);
 
-        addSectionHeader(panel, gbc, "Salary Computation", 16);
+        addSectionHeader(panel, gbc, "Salary Computation", 14);
 
         gbc.gridx = 0;
         gbc.gridy = 15;
@@ -233,19 +233,45 @@ public class EmployeeDashboardFrame extends JFrame {
         netPayValueLabel = new JLabel("-");
         panel.add(netPayValueLabel, gbc);
 
+        gbc.gridx = 0;
+        gbc.gridy = 21;
+        gbc.gridwidth = 2;
+
+        backButton = new JButton(
+        payrollStaffMode ? "Back to Menu" : "Logout"
+);
+        panel.add(backButton, gbc);
+
         add(panel);
 
         searchButton.addActionListener(e -> searchEmployee());
         computePayrollButton.addActionListener(e -> computePayroll());
         resetButton.addActionListener(e -> resetForm());
-        backButton.addActionListener(e -> {
-    dispose();
-    new MainMenuFrame();
+
+       backButton.addActionListener(e -> {
+
+    if (payrollStaffMode) {
+        dispose();
+        new MainMenuFrame();
+
+    } else {
+
+        int choice = JOptionPane.showConfirmDialog(
+                this,
+                "Are you sure you want to logout?",
+                "Logout Confirmation",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (choice == JOptionPane.YES_OPTION) {
+            dispose();
+            new LoginFrame();
+        }
+    }
 });
 
         employeeNumberField.getDocument().addDocumentListener(
                 new DocumentListener() {
-
                     public void insertUpdate(DocumentEvent e) {
                         clearOnEmployeeNumberChange();
                     }
@@ -264,7 +290,6 @@ public class EmployeeDashboardFrame extends JFrame {
     }
 
     private void addSectionHeader(JPanel panel, GridBagConstraints gbc, String text, int row) {
-
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.gridwidth = 2;
@@ -282,7 +307,6 @@ public class EmployeeDashboardFrame extends JFrame {
     }
 
     private void searchEmployee() {
-
         try {
             String employeeNumberText = employeeNumberField.getText().trim();
 
@@ -329,20 +353,17 @@ public class EmployeeDashboardFrame extends JFrame {
     }
 
     private void computePayroll() {
-
         if (selectedEmployee == null) {
             showErrorMessage("Please search for an employee first.");
             return;
         }
 
         String selectedPeriod = payPeriodComboBox.getSelectedItem().toString();
-
         double totalHours = 0;
 
         for (AttendanceRecord record : attendanceRecords) {
             if (record.getEmployee().getEmployeeNumber() == selectedEmployee.getEmployeeNumber()
                     && isWithinSelectedPeriod(record.getDate(), selectedPeriod)) {
-
                 totalHours += record.getHoursWorked();
             }
         }
@@ -352,10 +373,7 @@ public class EmployeeDashboardFrame extends JFrame {
             return;
         }
 
-        // CP1 payroll rule:
-        // Deductions are applied only during the second payroll cutoff period.
         boolean applyDeductions = selectedPeriod.contains("16-");
-
         double monthlyGross = computeMonthlyGrossForSelectedPeriod(selectedPeriod);
 
         PayrollRecord payrollRecord = new PayrollRecord(
@@ -384,16 +402,12 @@ public class EmployeeDashboardFrame extends JFrame {
     }
 
     private double computeMonthlyGrossForSelectedPeriod(String selectedPeriod) {
-
         String monthName = selectedPeriod.split(" ")[0];
         int targetMonth = getMonthNumber(monthName);
-
         double monthlyHours = 0;
 
         for (AttendanceRecord record : attendanceRecords) {
-            if (record.getEmployee().getEmployeeNumber()
-                    == selectedEmployee.getEmployeeNumber()) {
-
+            if (record.getEmployee().getEmployeeNumber() == selectedEmployee.getEmployeeNumber()) {
                 try {
                     LocalDate date = parseDate(record.getDate());
 
@@ -411,7 +425,6 @@ public class EmployeeDashboardFrame extends JFrame {
     }
 
     private int getMonthNumber(String monthName) {
-
         switch (monthName) {
             case "June": return 6;
             case "July": return 7;
@@ -425,7 +438,6 @@ public class EmployeeDashboardFrame extends JFrame {
     }
 
     private boolean isWithinSelectedPeriod(String dateText, String selectedPeriod) {
-
         try {
             LocalDate date = parseDate(dateText);
 
@@ -455,7 +467,6 @@ public class EmployeeDashboardFrame extends JFrame {
     }
 
     private LocalDate parseDate(String dateText) {
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy");
         return LocalDate.parse(dateText, formatter);
     }
@@ -465,7 +476,6 @@ public class EmployeeDashboardFrame extends JFrame {
     }
 
     private void clearOnEmployeeNumberChange() {
-
         selectedEmployee = null;
 
         nameValueLabel.setText("-");
@@ -482,7 +492,6 @@ public class EmployeeDashboardFrame extends JFrame {
     }
 
     private void resetForm() {
-
         employeeNumberField.setText("");
         payPeriodComboBox.setSelectedIndex(0);
         payPeriodComboBox.setEnabled(false);
@@ -498,7 +507,6 @@ public class EmployeeDashboardFrame extends JFrame {
     }
 
     private void clearPayrollLabels() {
-
         cutoffPeriodValueLabel.setText("-");
         hoursWorkedValueLabel.setText("-");
         grossPayValueLabel.setText("-");
@@ -510,7 +518,6 @@ public class EmployeeDashboardFrame extends JFrame {
     }
 
     private void showErrorMessage(String message) {
-
         JOptionPane.showMessageDialog(
                 this,
                 message,

@@ -92,28 +92,34 @@ public class EmployeeRecordManagementFrame extends JFrame {
         addField(formPanel, gbc, "Position:", positionField, 4);
         addField(formPanel, gbc, "Hourly Rate:", hourlyRateField, 5);
 
-        JPanel buttonPanel = new JPanel();
+JPanel buttonContainer = new JPanel(new GridLayout(2, 1, 5, 5));
 
-        addButton = new JButton("Add Employee");
-        updateButton = new JButton("Update Employee");
-        viewButton = new JButton("View Details");
-        clearButton = new JButton("Clear Fields");
-        refreshButton = new JButton("Refresh Table");
-        deleteButton = new JButton("Delete Employee");
-        backButton = new JButton("Back to Menu");
+addButton = new JButton("Add Employee");
+updateButton = new JButton("Update Employee");
+viewButton = new JButton("View Details");
+clearButton = new JButton("Clear Fields");
+refreshButton = new JButton("Refresh Table");
+deleteButton = new JButton("Delete Employee");
+backButton = new JButton("Back to Menu");
 
-        buttonPanel.add(addButton);
-        buttonPanel.add(updateButton);
-        buttonPanel.add(viewButton);
-        buttonPanel.add(clearButton);
-        buttonPanel.add(refreshButton);
-        buttonPanel.add(deleteButton);
-        buttonPanel.add(backButton);
+JPanel topButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
+topButtonPanel.add(addButton);
+topButtonPanel.add(updateButton);
+topButtonPanel.add(deleteButton);
 
-        gbc.gridx = 0;
-        gbc.gridy = 6;
-        gbc.gridwidth = 2;
-        formPanel.add(buttonPanel, gbc);
+JPanel bottomButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
+bottomButtonPanel.add(viewButton);
+bottomButtonPanel.add(refreshButton);
+bottomButtonPanel.add(clearButton);
+bottomButtonPanel.add(backButton);
+
+buttonContainer.add(topButtonPanel);
+buttonContainer.add(bottomButtonPanel);
+
+gbc.gridx = 0;
+gbc.gridy = 6;
+gbc.gridwidth = 2;
+formPanel.add(buttonContainer, gbc);
 
         add(formPanel, BorderLayout.SOUTH);
 
@@ -124,7 +130,7 @@ public class EmployeeRecordManagementFrame extends JFrame {
         refreshButton.addActionListener(e -> loadTableData());
         deleteButton.addActionListener(e -> deleteSelectedEmployee());
         backButton.addActionListener(e -> {
-    dispose();
+     dispose();
     new MainMenuFrame();
 });
     }
@@ -136,7 +142,6 @@ public class EmployeeRecordManagementFrame extends JFrame {
         Date earliestDate = calendar.getTime();
 
         calendar = Calendar.getInstance();
-        calendar.add(Calendar.YEAR, -15);
         Date latestDate = calendar.getTime();
 
         SpinnerDateModel model = new SpinnerDateModel(
@@ -447,7 +452,7 @@ public class EmployeeRecordManagementFrame extends JFrame {
 
     private Date getDefaultBirthday() {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.YEAR, -15);
+        calendar.add(Calendar.YEAR, -25);
         return calendar.getTime();
     }
 
