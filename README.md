@@ -67,7 +67,7 @@ Password: admin123
 
 ### Employee
 
-Username: 10001
+Username: user
 
-Password: pass123
+Password: user123
 
