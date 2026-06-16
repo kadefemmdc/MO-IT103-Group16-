@@ -2,7 +2,7 @@
 
 Date Updated: 6/16/2026
 
-Milestone 2: Employee Management and Payroll System
+Milestone 2: MotorPH Employee App – Record Management, Salary Computation, and Data Update
 
 ## Team Details
 
