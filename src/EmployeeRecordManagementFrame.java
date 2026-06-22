@@ -56,7 +56,13 @@ public class EmployeeRecordManagementFrame extends JFrame {
                 "Hourly Rate"
         };
 
-        tableModel = new DefaultTableModel(columns, 0);
+        tableModel = new DefaultTableModel(columns, 0) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+        return false;
+            }
+       };
+
         employeeTable = new JTable(tableModel);
 
         employeeTable.getSelectionModel().addListSelectionListener(e -> {
